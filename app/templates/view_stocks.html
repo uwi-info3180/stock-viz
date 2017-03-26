@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1 class="page-header">Stock Visualizer</h1>
+<p class="lead">Below are the Flash Quotes for the NASDAQ-100.</p>
+
+<div ng-app="stockApp" ng-controller="stockCtrl">
+  {% raw %}
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#chart" aria-controls="chart" role="tab" data-toggle="tab">Chart</a></li>
+    <li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="chart">
+      <div id="stock-chart">
+      </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="data">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Symbol</td>
+            <td>Price</td>
+            <td>Change</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="stock in stockData">
+            <td>{{ stock.name }}</td>
+            <td>{{ stock.symbol }}</td>
+            <td>{{ stock.price }}</td>
+            <td>{{ stock.net_change }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endraw %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="{{ url_for('static', filename="js/angular.min.js") }}" charset="utf-8"></script>
+<script src="{{ url_for('static', filename="js/app.js") }}" charset="utf-8"></script>
+{% endblock %}
