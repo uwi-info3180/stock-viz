@@ -22,13 +22,14 @@ app.controller('stockCtrl', function($scope, $http) {
     var format = d3.format(",d");  // convert value to integer
     var color = d3.scaleOrdinal(d3.schemeCategory20);  // create ordial scale with 20 colors
 
-    // svg config
+    // SVG config
     var svg = d3.select("#stock-chart").append("svg") // append to DOM
       .attr("width", width)
       .attr("height", height)
       .attr("class", "bubble");
 
-    // tooltip config
+    // tooltip config so when we hover over each circle we will see details
+    // about the stock
     var tooltip = d3.select("body")
       .append("div")
       .style("position", "absolute")
@@ -46,8 +47,10 @@ app.controller('stockCtrl', function($scope, $http) {
         .size([width, height])  // chart layout size
         .padding(1);
 
+      // Get our different stock quote nodes
       var nodes = d3.hierarchy(quotes).sum(function(d) { return d.price; });
 
+      // create an SVG node
       var node = svg.selectAll('.node')
         .data(bubble(nodes).descendants())
         .enter()
@@ -56,6 +59,7 @@ app.controller('stockCtrl', function($scope, $http) {
         .attr('class', 'node')
         .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'});
 
+      // Append that SVG circle to our node
       node.append("circle")
         .attr("r", function(d) { return d.r; })
         .style('fill', function(d) { return color(d.data.symbol); })
@@ -69,9 +73,10 @@ app.controller('stockCtrl', function($scope, $http) {
         })
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
-        node.append('text')
-          .attr("dy", ".3em")
-          .style('text-anchor', 'middle')
-          .text(function(d) { return d.data.symbol; });
+      // Display the Quote Symbol on the circle.
+      node.append('text')
+        .attr("dy", ".3em")
+        .style('text-anchor', 'middle')
+        .text(function(d) { return d.data.symbol; });
   }
 });
